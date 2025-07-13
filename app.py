@@ -7,17 +7,20 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app, origins=["*"])
+
+# ✅ FIXED: Allow requests from your Vercel frontend
+CORS(app, resources={r"/*": {"origins": "VERCEL URL HERE"}})
 
 # Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
+# Load credentials from local file
 try:
     with open("credentials.json") as f:
         creds_info = json.load(f)
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
     client = gspread.authorize(creds)
-    sheet = client.open("BloomIQ Gamma").sheet1  # Update this if needed
+    sheet = client.open("BloomIQ Beta").sheet1
 except Exception as e:
     print(f"Failed to load Google credentials: {e}")
     sheet = None
