@@ -20,7 +20,7 @@ try:
         creds_info = json.load(f)
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
     client = gspread.authorize(creds)
-    sheet = client.open("BloomIQ Beta").sheet1
+    sheet = client.open("BloomIQ Delta").sheet1
 except Exception as e:
     print(f"Failed to load Google credentials: {e}")
     sheet = None
