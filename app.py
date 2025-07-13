@@ -20,8 +20,7 @@ CORS(app, resources={r"/*": {
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 try:
-    with open("credentials.json") as f:
-        creds_info = json.load(f)
+    creds_info = json.loads(os.environ.get("GOOGLE_CREDS_JSON"))
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
     client = gspread.authorize(creds)
     sheet = client.open("BloomIQ Delta").sheet1
