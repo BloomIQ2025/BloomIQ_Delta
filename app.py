@@ -9,7 +9,7 @@ import json
 app = Flask(__name__)
 
 # ✅ FIXED: Allow requests from your Vercel frontend
-CORS(app, resources={r"/*": {"origins": "VERCEL URL HERE"}})
+CORS(app, resources={r"/*": {"origins": "https://bloom-iq-delta.vercel.app/"}})
 
 # Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
