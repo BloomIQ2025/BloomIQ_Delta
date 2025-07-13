@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     submitButton.textContent = "Submitting...";
 
     try {
-      const response = await fetch('RENDER LINK HERE/submit', {
+      const response = await fetch('https://bloomiq-delta.onrender.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
