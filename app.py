@@ -5,16 +5,20 @@ from oauth2client.service_account import ServiceAccountCredentials
 import requests
 import os
 import json
+import traceback
 
 app = Flask(__name__)
 
-# ✅ FIXED: Allow requests from your Vercel frontend
-CORS(app, resources={r"/*": {"origins": "https://bloom-iq-delta.vercel.app"}})
+# ✅ Allow requests from your Vercel frontend
+CORS(app, resources={r"/*": {
+    "origins": "https://bloom-iq-delta.vercel.app",
+    "methods": ["GET", "POST", "OPTIONS"],
+    "allow_headers": ["Content-Type"]
+}})
 
 # Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# Load credentials from local file
 try:
     with open("credentials.json") as f:
         creds_info = json.load(f)
@@ -22,7 +26,8 @@ try:
     client = gspread.authorize(creds)
     sheet = client.open("BloomIQ Delta").sheet1
 except Exception as e:
-    print(f"Failed to load Google credentials: {e}")
+    print(f"❌ Failed to load Google credentials: {e}")
+    traceback.print_exc()
     sheet = None
 
 # Telegram bot setup
@@ -30,6 +35,10 @@ TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 def send_telegram_message(message):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("⚠️ Telegram credentials are missing.")
+        return
+
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -40,21 +49,36 @@ def send_telegram_message(message):
         response = requests.post(url, data=payload)
         response.raise_for_status()
     except Exception as e:
-        print(f"Failed to send Telegram message: {e}")
+        print(f"❌ Failed to send Telegram message: {e}")
+        traceback.print_exc()
+
+# ✅ Health check route
+@app.route('/')
+def home():
+    return "✅ BloomIQ backend is running."
+
+# ✅ Handle preflight CORS requests
+@app.route('/submit', methods=['OPTIONS'])
+def handle_options():
+    return '', 204
 
 @app.route('/submit', methods=['POST'])
 def submit():
     if sheet is None:
+        print("❌ Google Sheet not initialized.")
         return jsonify({"error": "Google Sheets not initialized"}), 500
 
     try:
         data = request.get_json()
+        print("📥 Received data:", data)
+
         name = data.get('name')
         email = data.get('email')
         phone = data.get('phone')
         city = data.get('city')
         state = data.get('state')
 
+        print("📝 Appending to sheet:", [name, email, phone, city, state])
         sheet.append_row([name, email, phone, city, state])
 
         message = (
@@ -69,7 +93,8 @@ def submit():
 
         return jsonify({"message": "Data added to Google Sheet and Telegram notified"}), 200
     except Exception as e:
-        print(f"Error in /submit: {e}")
+        print("❌ Error in /submit:", e)
+        traceback.print_exc()
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
