@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    const consentCheckbox = document.getElementById('privacyConsent');
+    if (!consentCheckbox.checked) {
+      alert("Please confirm that you have read and agree to the Privacy Policy.");
+      return;
+    }
+
     const data = {
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,

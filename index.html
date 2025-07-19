@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Connect with a Lola-endorsed life coach today!</title>
+  <title>Increase Your Warm Leads Today</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #000; /* Black background */
+      background-color: #f9f9f9;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -18,25 +18,21 @@
     }
 
     .form-container {
-      background-color: #ffffff;
+      background-color: #fff;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       padding: 40px;
       width: 100%;
       max-width: 420px;
       box-sizing: border-box;
-      border-top: 6px solid #ff7a00; /* Orange accent */
     }
 
     h2 {
       text-align: center;
-      color: #008080; /* Teal */
+      color: #D4AF37;
       font-weight: 600;
       margin-bottom: 30px;
-    }
-
-    label {
-      font-size: 14px;
+   ;
       color: #333;
       margin-bottom: 6px;
       display: block;
@@ -54,10 +50,21 @@
       box-sizing: border-box;
     }
 
+    .checkbox-container {
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .checkbox-container a {
+      color: #D4AF37;
+      text-decoration: underline;
+    }
+
     button {
       width: 100%;
       padding: 14px;
-      background-color: #ff7a00; /* Orange */
+      background-color: #D4AF37;
       color: white;
       border: none;
       border-radius: 6px;
@@ -68,7 +75,7 @@
     }
 
     button:hover {
-      background-color: #e56a00;
+      background-color: #b8962f;
     }
 
     .privacy-note {
@@ -81,7 +88,7 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>Connect with a Lola-endorsed life coach today!</h2>
+    <h2>Increase Your Warm Leads Today</h2>
     <form id="leadForm">
       <label for="name">Full Name</label>
       <input type="text" id="name" name="name" required />
@@ -98,71 +105,19 @@
       <label for="state">State</label>
       <input type="text" id="state" name="state" required />
 
+      <div class="checkbox-container">
+        <input type="checkbox" id="privacyConsent" required />
+        <label for="privacyConsent">
+          I have read and agree to the 
+          https://privacy-policy-taupe-pi.vercel.app.
+        </label>
+      </div>
+
       <button type="submit">Get Started</button>
     </form>
     <p class="privacy-note">We respect your privacy. Your information is secure with us.</p>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById('leadForm');
-      const submitButton = form.querySelector('button');
-
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const data = {
-          name: document.getElementById('name').value,
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
-          city: document.getElementById('city').value,
-          state: document.getElementById('state').value
-        };
-
-        submitButton.disabled = true;
-        submitButton.textContent = "Submitting...";
-
-        try {
-          const response = await fetch('https://bloomiq-delta.onrender.com/submit', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-          });
-
-          if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-          }
-
-          const result = await response.json();
-
-          const oldMessage = document.getElementById('successMessage');
-          if (oldMessage) oldMessage.remove();
-
-          const message = document.createElement("div");
-          message.id = "successMessage";
-          message.textContent = "✅ Success! A professional from our service network will be reaching out soon.";
-          message.style.backgroundColor = "#d4edda";
-          message.style.color = "#155724";
-          message.style.padding = "15px";
-          message.style.border = "1px solid #c3e6cb";
-          message.style.borderRadius = "5px";
-          message.style.marginTop = "20px";
-          message.style.textAlign = "center";
-          message.style.fontWeight = "bold";
-
-          document.querySelector(".form-container").appendChild(message);
-          form.reset();
-        } catch (error) {
-          alert("Something went wrong. Please try again in a moment.");
-          console.error("Submission error:", error);
-        } finally {
-          submitButton.disabled = false;
-          submitButton.textContent = "Get Started";
-        }
-      });
-    });
-  </script>
+  <script src="form.js"></script>
 </body>
 </html>
