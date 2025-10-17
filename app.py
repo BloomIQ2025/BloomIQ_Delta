@@ -6,6 +6,7 @@ import requests
 import os
 import json
 import traceback
+from datetime import datetime, timezone  # NEW
 
 app = Flask(__name__)
 
@@ -23,7 +24,7 @@ try:
     creds_info = json.loads(os.environ.get("GOOGLE_CREDS_JSON"))
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
     client = gspread.authorize(creds)
-    sheet = client.open("BloomIQ Delta").sheet1
+    sheet = client.open("BloomIQ Delta").sheet1  # "Sheet1"
 except Exception as e:
     print(f"❌ Failed to load Google credentials: {e}")
     traceback.print_exc()
@@ -37,7 +38,6 @@ def send_telegram_message(message):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("⚠️ Telegram credentials are missing.")
         return
-
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -71,22 +71,35 @@ def submit():
         data = request.get_json()
         print("📥 Received data:", data)
 
-        name = data.get('name')
-        email = data.get('email')
-        phone = data.get('phone')
-        city = data.get('city')
-        state = data.get('state')
+        name = (data.get('name') or '').strip()
+        email = (data.get('email') or '').strip()
+        phone = (data.get('phone') or '').strip()
+        city = (data.get('city') or '').strip()
+        state = (data.get('state') or '').strip()
 
-        print("📝 Appending to sheet:", [name, email, phone, city, state])
-        sheet.append_row([name, email, phone, city, state])
+        # NEW fields from client
+        raw_privacy = str(data.get('privacy_ack', '')).lower()
+        privacy_ack = 'TRUE' if raw_privacy in ('true', '1', 'yes', 'on') else 'FALSE'
+        page_url = (data.get('page_url') or '').strip()
 
+        # NEW: server-side timestamp (UTC, ISO8601)
+        created_at = datetime.now(timezone.utc).isoformat(timespec='seconds')
+
+        row = [name, email, phone, city, state, privacy_ack, page_url, created_at]
+        print("📝 Appending to sheet:", row)
+        sheet.append_row(row)
+
+        # Keep Telegram alert, now with timestamp added for your visibility
         message = (
             "📢 *New Lead Alert!*\n\n"
             f"*Name:* {name}\n"
             f"*Email:* {email}\n"
             f"*Phone:* {phone}\n"
             f"*City:* {city}\n"
-            f"*State:* {state}"
+            f"*State:* {state}\n"
+            f"*Privacy Ack:* {privacy_ack}\n"
+            f"*Page URL:* {page_url}\n"
+            f"*Timestamp (UTC):* {created_at}"
         )
         send_telegram_message(message)
 
@@ -95,6 +108,5 @@ def submit():
         print("❌ Error in /submit:", e)
         traceback.print_exc()
         return jsonify({"error": "Internal server error"}), 500
-
 if __name__ == '__main__':
     app.run(debug=True)

@@ -29,10 +29,12 @@
 
     h2 {
       text-align: center;
-      color: #D4AF37;
+      color: #333;
       font-weight: 600;
       margin-bottom: 30px;
-   ;
+    }
+
+    label {
       color: #333;
       margin-bottom: 6px;
       display: block;
@@ -47,7 +49,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 14px;
-      box-sizing: border-box;
+      box-sizing: border-box.
     }
 
     .checkbox-container {
@@ -106,18 +108,26 @@
       <input type="text" id="state" name="state" required />
 
       <div class="checkbox-container">
-        <input type="checkbox" id="privacyConsent" required />
+        <!-- IMPORTANT: name="privacy_ack" ensures it’s a real field -->
+        <input type="checkbox" id="privacyConsent" name="privacy_ack" required />
         <label for="privacyConsent">
-          I have read and agree to the 
-          https://privacy-policy-taupe-pi.vercel.app
+          I have read and agree to the
+          <a href="https://privacy-policy-taupe-pi.vercelcy Policy</a>.
         </label>
       </div>
+
+      <!-- Hidden field for the page URL (for your campaign/source) -->
+      <input type="hidden" id="page_url" name="page_url" value="" />
 
       <button type="submit">Get Started</button>
     </form>
     <p class="privacy-note">We respect your privacy. Your information is secure with us.</p>
   </div>
 
-  <script src="form.js"></script>
+  form.js</script>
+  <script>
+    // Populate page_url for visibility (JS also sends it)
+    document.getElementById('page_url').value = window.location.href.split('#')[0];
+  </script>
 </body>
 </html>

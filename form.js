@@ -11,12 +11,20 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    // NEW: compute these two values
+    const privacyAck = consentCheckbox.checked ? 'true' : 'false';
+    const pageUrl = window.location.href.split('#')[0];
+
     const data = {
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
       phone: document.getElementById('phone').value,
       city: document.getElementById('city').value,
-      state: document.getElementById('state').value
+      state: document.getElementById('state').value,
+
+      // NEW: include in request body
+      privacy_ack: privacyAck,
+      page_url: pageUrl
     };
 
     submitButton.disabled = true;
