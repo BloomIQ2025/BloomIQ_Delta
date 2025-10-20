@@ -4,18 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Increase Your Warm Leads Today</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-  https://fonts.gstatic.com
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"   body {
+    body {
       font-family: 'Inter', sans-serif;
       background-color: #f9f9f9;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
       margin: 0;
-      padding: 20px;
-      box-sizing: border-box;
     }
 
     .form-container {
@@ -30,16 +29,13 @@
 
     h2 {
       text-align: center;
-      color: #333;
+      color: #D4AF37;
       font-weight: 600;
       margin-bottom: 30px;
-    }
-
-    label {
+   ;
       color: #333;
       margin-bottom: 6px;
       display: block;
-      font-size: 14px;
     }
 
     input[type="text"],
@@ -58,7 +54,6 @@
       margin-bottom: 20px;
       font-size: 13px;
       color: #555;
-      line-height: 1.4;
     }
 
     .checkbox-container a {
@@ -90,14 +85,11 @@
       margin-top: 20px;
     }
   </style>
-
-  <!-- Load JS safely; using absolute path ensures correct file resolution on Vercel -->
-  <script defer src="/head>
+</head>
 <body>
   <div class="form-container">
     <h2>Increase Your Warm Leads Today</h2>
-
-    <form id="leadForm" novalidate>
+    <form id="leadForm">
       <label for="name">Full Name</label>
       <input type="text" id="name" name="name" required />
 
@@ -114,21 +106,18 @@
       <input type="text" id="state" name="state" required />
 
       <div class="checkbox-container">
-        <input type="checkbox" id="privacyConsent" name="privacy_ack" required />
+        <input type="checkbox" id="privacyConsent" required />
         <label for="privacyConsent">
-          I have read and agree to the
-          https://privacy-policy-taupe-pi.vercel.appPrivacy Policy</a>.
+          I have read and agree to the 
+          https://privacy-policy-taupe-pi.vercel.app
         </label>
       </div>
 
-      <!-- Hidden field for the exact page URL -->
-      <input type="hidden" id="page_url" name="page_url" value="" />
-
       <button type="submit">Get Started</button>
     </form>
-
-    <!-- Plain text (not a link) -->
     <p class="privacy-note">We respect your privacy. Your information is secure with us.</p>
   </div>
+
+  <script src="form.js"></script>
 </body>
 </html>
