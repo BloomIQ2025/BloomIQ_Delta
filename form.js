@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const message = document.createElement("div");
       message.id = "successMessage";
-      message.textContent = "✅ Success! A professional from our service network will be reaching out soon.";
+      message.textContent = "✅ Success!";
       message.style.backgroundColor = "#d4edda";
       message.style.color = "#155724";
       message.style.padding = "15px";
