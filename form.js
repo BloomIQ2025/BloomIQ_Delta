@@ -11,12 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    // ✅ Collect form data + timestamp + current page URL
     const data = {
       name: document.getElementById('name').value,
       email: document.getElementById('email').value,
       phone: document.getElementById('phone').value,
       city: document.getElementById('city').value,
-      state: document.getElementById('state').value
+      state: document.getElementById('state').value,
+      timestamp: new Date().toISOString(), // ⏰ Add timestamp
+      page_url: window.location.href        // 🌐 Add current page URL
     };
 
     submitButton.disabled = true;
@@ -37,9 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const result = await response.json();
 
+      // ✅ Remove old message if it exists
       const oldMessage = document.getElementById('successMessage');
       if (oldMessage) oldMessage.remove();
 
+      // ✅ Show success message
       const message = document.createElement("div");
       message.id = "successMessage";
       message.textContent = "✅ Success!";

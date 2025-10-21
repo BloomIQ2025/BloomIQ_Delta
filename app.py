@@ -71,30 +71,38 @@ def submit():
         data = request.get_json()
         print("📥 Received data:", data)
 
+        # ✅ Extract fields (including new ones)
         name = data.get('name')
         email = data.get('email')
         phone = data.get('phone')
         city = data.get('city')
         state = data.get('state')
+        timestamp = data.get('timestamp')
+        page_url = data.get('page_url')
 
-        print("📝 Appending to sheet:", [name, email, phone, city, state])
-        sheet.append_row([name, email, phone, city, state])
+        print("📝 Appending to sheet:", [name, email, phone, city, state, timestamp, page_url])
+        sheet.append_row([name, email, phone, city, state, timestamp, page_url])
 
+        # ✅ Telegram message (includes timestamp + URL)
         message = (
             "📢 *New Lead Alert!*\n\n"
             f"*Name:* {name}\n"
             f"*Email:* {email}\n"
             f"*Phone:* {phone}\n"
             f"*City:* {city}\n"
-            f"*State:* {state}"
+            f"*State:* {state}\n"
+            f"*Time:* {timestamp}\n"
+            f"*Source:* {page_url}"
         )
         send_telegram_message(message)
 
         return jsonify({"message": "Data added to Google Sheet and Telegram notified"}), 200
+
     except Exception as e:
         print("❌ Error in /submit:", e)
         traceback.print_exc()
         return jsonify({"error": "Internal server error"}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
